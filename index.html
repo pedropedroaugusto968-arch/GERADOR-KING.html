@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KING CHEATS - BY KING CHEATS</title>
+    <style>
+        /* DESIGN HACKER PRETO E BRANCO */
+        body, html { margin: 0; padding: 0; background: #000; color: #fff; font-family: 'Courier New', monospace; overflow-x: hidden; }
+        #bg-canvas { position: fixed; top: 0; left: 0; z-index: -1; opacity: 0.4; }
+        .container { display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        .menu-box { background: rgba(0,0,0,0.9); border: 1px solid #fff; width: 350px; padding: 25px; box-shadow: 0 0 20px #fff; }
+        
+        h1 { font-size: 22px; letter-spacing: 4px; text-align: center; border-bottom: 2px solid #fff; padding-bottom: 10px; }
+        .section-title { font-size: 10px; color: #888; margin: 15px 0 5px 0; text-transform: uppercase; letter-spacing: 2px; }
+        
+        /* BOTÕES E INPUTS */
+        input[type="text"], input[type="password"] { width: 90%; padding: 10px; margin: 10px 0; background: #000; border: 1px solid #fff; color: #fff; text-align: center; }
+        button { width: 100%; padding: 12px; background: #fff; color: #000; border: none; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        
+        /* BOTÃO DISCORD */
+        .btn-discord { background: transparent; color: #fff; border: 1px solid #fff; margin-top: 15px; text-decoration: none; display: block; padding: 10px; font-size: 12px; font-weight: bold; text-align: center; }
+        .btn-discord:hover { background: #fff; color: #000; }
+
+        /* FUNÇÕES */
+        .item { display: flex; justify-content: space-between; align-items: center; margin: 12px 0; font-size: 13px; }
+        input[type="range"] { width: 100%; accent-color: #fff; margin-top: 5px; }
+        .switch { position: relative; display: inline-block; width: 34px; height: 20px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #333; transition: .4s; border: 1px solid #fff; }
+        .slider:before { position: absolute; content: ""; height: 12px; width: 12px; left: 3px; bottom: 3px; background-color: #fff; transition: .4s; }
+        input:checked + .slider { background-color: #fff; }
+        input:checked + .slider:before { transform: translateX(14px); background-color: #000; }
+        
+        .footer { text-align: center; margin-top: 25px; font-size: 12px; letter-spacing: 3px; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <canvas id="bg-canvas"></canvas>
+
+    <div class="container">
+        <div id="login-box" class="menu-box">
+            <h1>KING CHEATS</h1>
+            <input type="text" id="user" placeholder="USUÁRIO">
+            <input type="password" id="pass" placeholder="SENHA">
+            <button onclick="logar()">ENTRAR NO SISTEMA</button>
+            <a href="https://discord.gg/NSXgpxwXJ" class="btn-discord">ENTRAR NO DISCORD</a>
+        </div>
+
+        <div id="main-menu" class="menu-box" style="display: none;">
+            <h1>KING MENU</h1>
+            
+            <div class="section-title">Aimbot Advanced</div>
+            <div class="item"><span>Lock Head (100%)</span> <label class="switch"><input type="checkbox" checked><span class="slider"></span></label></div>
+            <div class="item"><span>Auto Fire</span> <label class="switch"><input type="checkbox" checked><span class="slider"></span></label></div>
+            <div class="item"><span>FOV Range</span> <span id="fov-val">15.0</span></div>
+            <input type="range" min="1" max="50" value="15" oninput="document.getElementById('fov-val').innerText = this.value + '.0'">
+            
+            <div class="section-title">Visual & ESP</div>
+            <div class="item"><span>ESP Name</span> <label class="switch"><input type="checkbox" checked><span class="slider"></span></label></div>
+            <div class="item"><span>ESP Line</span> <label class="switch"><input type="checkbox" checked><span class="slider"></span></label></div>
+            
+            <div class="section-title">Regedit & Performance</div>
+            <div class="item"><span>No Recoil</span> <label class="switch"><input type="checkbox" checked><span class="slider"></span></label></div>
+            <div class="item"><span>Smooth:</span> <span id="smooth-val">450</span></div>
+            <input type="range" min="100" max="1000" value="450" oninput="document.getElementById('smooth-val').innerText = this.value">
+
+            <button onclick="alert('KING CHEATS ATIVADO!')">ATIVAR FUNÇÕES</button>
+            <a href="https://discord.gg/NSXgpxwXJ" class="btn-discord">SUPORTE DISCORD</a>
+            <div class="footer">BY KING CHEATS</div>
+        </div>
+    </div>
+
+    <script>
+        // MATRIX BACKGROUND
+        const canvas = document.getElementById('bg-canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+        const letters = "010101KINGCHEATS";
+        const fontSize = 10;
+        const columns = canvas.width / fontSize;
+        const drops = Array(Math.floor(columns)).fill(1);
+        function draw() {
+            ctx.fillStyle = "rgba(0, 0, 0, 0.05)"; ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = "#fff"; ctx.font = fontSize + "px monospace";
+            drops.forEach((y, i) => {
+                const text = letters[Math.floor(Math.random() * letters.length)];
+                ctx.fillText(text, i * fontSize, y * fontSize);
+                if (y * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
+                drops[i]++;
+            });
+        }
+        setInterval(draw, 33);
+
+        // LOGIN SYSTEM
+        function logar() {
+            const u = document.getElementById('user').value;
+            const p = document.getElementById('pass').value;
+            if(u === "KING" && p === "CHEATS") {
+                document.getElementById('login-box').style.display = 'none';
+                document.getElementById('main-menu').style.display = 'block';
+            } else { alert("ACESSO NEGADO!"); }
+        }
+    </script>
+</body>
+</html>
