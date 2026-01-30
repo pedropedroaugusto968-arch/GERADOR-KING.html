@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KING SENSI 200 - BY KING CHEATS</title>
+    <style>
+        /* DESIGN HACKER PRETO E BRANCO */
+        body, html { margin: 0; padding: 0; background: #000; color: #fff; font-family: 'Courier New', monospace; overflow: hidden; height: 100%; }
+        #matrix-bg { position: fixed; top: 0; left: 0; z-index: -1; opacity: 0.2; }
+        .main-container { display: flex; justify-content: center; align-items: center; height: 100vh; padding: 20px; }
+        .box { background: rgba(0, 0, 0, 0.95); border: 1px solid #fff; padding: 30px; width: 340px; text-align: center; box-shadow: 0 0 25px rgba(255, 255, 255, 0.1); }
+        h1 { font-size: 24px; letter-spacing: 5px; border-bottom: 2px solid #fff; padding-bottom: 10px; margin: 0 0 10px 0; }
+        .subtitle { font-size: 9px; letter-spacing: 2px; color: #888; margin-bottom: 20px; text-transform: uppercase; }
+        
+        input { width: 90%; padding: 12px; margin: 8px 0; background: #000; border: 1px solid #fff; color: #fff; text-align: center; outline: none; }
+        button { width: 100%; padding: 12px; background: #fff; color: #000; border: none; font-weight: bold; cursor: pointer; margin-top: 10px; text-transform: uppercase; }
+        
+        .platform-select { display: flex; gap: 10px; margin: 20px 0; }
+        .plat-btn { flex: 1; background: transparent; color: #fff; border: 1px solid #fff; padding: 10px; font-size: 11px; cursor: pointer; transition: 0.3s; }
+        .plat-btn.active { background: #fff; color: #000; box-shadow: 0 0 10px #fff; }
+        
+        .result-area { margin-top: 20px; border: 1px dashed #fff; padding: 15px; text-align: left; font-size: 13px; display: none; background: #050505; }
+        .res-line { display: flex; justify-content: space-between; margin-bottom: 6px; border-bottom: 1px solid #111; padding-bottom: 2px; }
+        .res-line b { color: #fff; font-size: 16px; letter-spacing: 1px; }
+
+        .discord-link { display: block; margin-top: 20px; padding: 10px; border: 1px solid #fff; color: #fff; text-decoration: none; font-size: 11px; font-weight: bold; }
+        .discord-link:hover { background: #fff; color: #000; }
+        .footer-text { margin-top: 25px; font-size: 12px; font-weight: bold; letter-spacing: 3px; opacity: 0.9; }
+    </style>
+</head>
+<body>
+    <canvas id="matrix-bg"></canvas>
+
+    <div class="main-container">
+        <div id="login-screen" class="box">
+            <h1>KING SENSI</h1>
+            <div class="subtitle">MAX SENSI 200 | DATABASE ACCESS</div>
+            <input type="text" id="user" placeholder="USUÁRIO">
+            <input type="password" id="pass" placeholder="SENHA">
+            <button onclick="login()">CONECTAR SISTEMA</button>
+            <a href="https://discord.gg/NSXgpxwXJ" class="discord-link">ENTRAR NO DISCORD</a>
+        </div>
+
+        <div id="generator-screen" class="box" style="display: none;">
+            <h1>KING MENU</h1>
+            <div class="subtitle">SISTEMA ATUALIZADO: v200.4</div>
+            
+            <div class="platform-select">
+                <button id="btn-android" class="plat-btn active" onclick="setPlatform('android')">ANDROID</button>
+                <button id="btn-ios" class="plat-btn" onclick="setPlatform('ios')">IOS (IPHONE)</button>
+            </div>
+
+            <button onclick="generate()">CALIBRAR SENSI 200</button>
+
+            <div id="result" class="result-area">
+                <div class="res-line">GERAL: <b id="r-geral">--</b></div>
+                <div class="res-line">RED DOT: <b id="r-red">--</b></div>
+                <div class="res-line">MIRA 2X: <b id="r-2x">--</b></div>
+                <div class="res-line">MIRA 4X: <b id="r-4x">--</b></div>
+                <div class="res-line"><span id="extra-name">DPI:</span> <b id="r-extra">--</b></div>
+            </div>
+
+            <a href="https://discord.gg/NSXgpxwXJ" class="discord-link">SUPORTE DISCORD</a>
+            <div class="footer-text">BY KING CHEATS</div>
+        </div>
+    </div>
+
+    <script>
+        // BACKGROUND MATRIX
+        const canvas = document.getElementById('matrix-bg');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+        const alphabet = "01KINGCHEATS200";
+        const fontSize = 12;
+        const columns = canvas.width / fontSize;
+        const drops = Array(Math.floor(columns)).fill(1);
+        function draw() {
+            ctx.fillStyle = "rgba(0, 0, 0, 0.05)"; ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = "#fff"; ctx.font = fontSize + "px monospace";
+            for (let i = 0; i < drops.length; i++) {
+                const text = alphabet.charAt(Math.floor(Math.random() * alphabet.length));
+                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
+                drops[i]++;
+            }
+        }
+        setInterval(draw, 35);
+
+        // LOGICA DO SISTEMA
+        let currentPlatform = 'android';
+
+        function login() {
+            const u = document.getElementById('user').value;
+            const p = document.getElementById('pass').value;
+            if (u === "KING" && p === "CHEATS") {
+                document.getElementById('login-screen').style.display = 'none';
+                document.getElementById('generator-screen').style.display = 'block';
+            } else { alert("ACESSO NEGADO: VERIFIQUE O LOGIN!"); }
+        }
+
+        function setPlatform(plat) {
+            currentPlatform = plat;
+            document.getElementById('btn-android').className = 'plat-btn' + (plat === 'android' ? ' active' : '');
+            document.getElementById('btn-ios').className = 'plat-btn' + (plat === 'ios' ? ' active' : '');
+        }
+
+        function generate() {
+            document.getElementById('result').style.display = 'block';
+            
+            if (currentPlatform === 'android') {
+                // Sensi Pro Android (Limite 200)
+                document.getElementById('r-geral').innerText = Math.floor(Math.random() * (200 - 185) + 185);
+                document.getElementById('r-red').innerText = Math.floor(Math.random() * (195 - 175) + 175);
+                document.getElementById('r-2x').innerText = Math.floor(Math.random() * (198 - 180) + 180);
+                document.getElementById('r-4x').innerText = "200";
+                document.getElementById('extra-name').innerText = "DPI:";
+                document.getElementById('r-extra').innerText = [580, 600, 720, 810, 960][Math.floor(Math.random() * 5)];
+            } else {
+                // Sensi Pro iOS (Limite 200)
+                document.getElementById('r-geral').innerText = Math.floor(Math.random() * (200 - 192) + 192);
+                document.getElementById('r-red').innerText = Math.floor(Math.random() * (198 - 188) + 188);
+                document.getElementById('r-2x').innerText = "200";
+                document.getElementById('r-4x').innerText = "200";
+                document.getElementById('extra-name').innerText = "CURS. MÓVEL:";
+                document.getElementById('r-extra').innerText = [120, 31, 115][Math.floor(Math.random() * 3)] + " (Refinado)";
+            }
+        }
+    </script>
+</body>
+</html>
