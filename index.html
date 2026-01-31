@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KING SENSI - PAINEL</title>
+    <style>
+        body, html { margin: 0; padding: 0; background: #000; color: #fff; font-family: 'Courier New', monospace; overflow: hidden; height: 100%; }
+        #matrix-bg { position: fixed; top: 0; left: 0; z-index: -1; opacity: 0.15; }
+        .container { display: flex; justify-content: center; align-items: center; height: 100vh; padding: 20px; }
+        
+        /* Moldura com brilho branco igual à foto */
+        .box { 
+            background: #000; border: 2px solid #fff; padding: 30px 15px; 
+            width: 340px; text-align: center; 
+            box-shadow: 0 0 25px rgba(255, 255, 255, 0.6); 
+        }
+
+        h1 { font-size: 26px; letter-spacing: 6px; margin: 0; font-weight: bold; text-transform: uppercase; }
+        .line { width: 100%; height: 1px; background: #fff; margin: 15px 0; }
+        .status-plano { font-size: 11px; color: #00ff00; margin-bottom: 20px; text-transform: uppercase; font-weight: bold; }
+
+        /* Botões Estilo Premium */
+        .btn-sensi { 
+            width: 100%; padding: 18px; background: #fff; color: #000; 
+            border: none; font-weight: bold; cursor: pointer; 
+            text-transform: uppercase; margin-top: 12px; font-size: 13px;
+            transition: 0.3s;
+        }
+        .btn-sensi:hover { background: #ccc; }
+
+        .btn-sair { 
+            width: 100%; padding: 12px; background: transparent; color: #fff; 
+            border: 1px solid #fff; cursor: pointer; text-transform: uppercase;
+            margin-top: 15px; font-size: 11px;
+        }
+
+        /* Barra de Injeção de Sensi */
+        .progress-box { width: 100%; background: #111; height: 8px; margin-top: 15px; display: none; border: 1px solid #333; }
+        .progress-fill { width: 0%; height: 100%; background: #fff; box-shadow: 0 0 10px #fff; }
+    </style>
+</head>
+<body>
+    <canvas id="matrix-bg"></canvas>
+
+    <div class="container">
+        <div id="main-panel" class="box">
+            <h1>KING SENSI</h1>
+            <div class="line"></div>
+            
+            <div id="plano-tag" class="status-plano">VERIFICANDO...</div>
+
+            <button class="btn-sensi" onclick="injetar('SMOOTHING')">SMOOTHING (AJUSTAR)</button>
+            <button class="btn-sensi" onclick="injetar('LOCK HEAD')">LOCK HEAD (ATIVAR)</button>
+
+            <div class="progress-box" id="p-box"><div class="progress-fill" id="p-fill"></div></div>
+            <div id="p-text" style="font-size: 9px; margin-top: 5px; display: none; color: #888;">INJETANDO SCRIPT...</div>
+
+            <button class="btn-sair" onclick="deslogar()">SAIR</button>
+        </div>
+    </div>
+
+    <script>
+        // SISTEMA DE SEGURANÇA E EXPIRAÇÃO
+        function checarAcesso() {
+            const expiraEm = localStorage.getItem('king_expira');
+            const agora = new Date().getTime();
+
+            if (!expiraEm || agora > parseInt(expiraEm)) {
+                localStorage.clear();
+                // Mostra o alerta de expiração igual à sua imagem
+                alert("ACESSO NEGADO: SUA KEY EXPIROU!");
+                window.location.href = "index.html"; 
+            } else {
+                const tempoRestante = parseInt(expiraEm) - agora;
+                const dias = Math.ceil(tempoRestante / (1000 * 60 * 60 * 24));
+                document.getElementById('plano-tag').innerText = "LICENÇA ATIVA: " + dias + " DIAS";
+            }
+        }
+
+        function injetar(tipo) {
+            const box = document.getElementById('p-box');
+            const fill = document.getElementById('p-fill');
+            const txt = document.getElementById('p-text');
+            let w = 0;
+
+            box.style.display = 'block';
+            txt.style.display = 'block';
+
+            const int = setInterval(() => {
+                if (w >= 100) {
+                    clearInterval(int);
+                    alert(tipo + " CONFIGURADO!");
+                    box.style.display = 'none';
+                    txt.style.display = 'none';
+                    fill.style.width = '0%';
+                } else {
+                    w++;
+                    fill.style.width = w + '%';
+                    txt.innerText = "CALIBRANDO " + tipo + "... " + w + "%";
+                }
+            }, 30);
+        }
+
+        function deslogar() {
+            localStorage.clear();
+            window.location.href = "index.html";
+        }
+
+        // MATRIX BACKGROUND (PREVINE TELA BRANCA SE O JS CARREGAR)
+        const canvas = document.getElementById('matrix-bg');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+        const alphabet = "01KINGCHEATS"; const fontSize = 12;
+        const columns = canvas.width / fontSize; const drops = Array(Math.floor(columns)).fill(1);
+        function draw() {
+            ctx.fillStyle = "rgba(0, 0, 0, 0.05)"; ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = "#fff"; ctx.font = fontSize + "px monospace";
+            for (let i = 0; i < drops.length; i++) {
+                const text = alphabet.charAt(Math.floor(Math.random() * alphabet.length));
+                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
+                drops[i]++;
+            }
+        }
+        setInterval(draw, 35);
+        
+        // Inicia a checagem de segurança
+        checarAcesso();
+    </script>
+</body>
+</html>
