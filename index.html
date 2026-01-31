@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KING SENSI</title>
+    <style>
+        body, html { margin: 0; padding: 0; background: #000; color: #fff; font-family: 'Courier New', monospace; overflow: hidden; height: 100%; }
+        .container { display: flex; justify-content: center; align-items: center; height: 100vh; padding: 20px; }
+        
+        /* Moldura com brilho igual à sua foto */
+        .box { 
+            background: #000; border: 2px solid #fff; padding: 35px 20px; 
+            width: 340px; text-align: center; 
+            box-shadow: 0 0 25px rgba(255, 255, 255, 0.7); 
+            display: none; /* Começa escondido */
+        }
+
+        h1 { font-size: 26px; letter-spacing: 6px; margin: 0; font-weight: bold; text-transform: uppercase; }
+        .line { width: 100%; height: 1px; background: #fff; margin: 15px 0; }
+        
+        /* Inputs e Botões */
+        input { 
+            width: 85%; padding: 15px; margin: 10px 0; background: #000; 
+            border: 1px solid #fff; color: #fff; text-align: center; outline: none;
+        }
+
+        .btn-white { 
+            width: 95%; padding: 18px; background: #fff; color: #000; 
+            border: none; font-weight: bold; cursor: pointer; 
+            text-transform: uppercase; margin-top: 10px; font-size: 13px;
+        }
+
+        .btn-outline { 
+            width: 95%; padding: 12px; background: transparent; color: #fff; 
+            border: 1px solid #fff; cursor: pointer; text-transform: uppercase;
+            margin-top: 15px; font-size: 11px;
+        }
+
+        .status-plano { color: #00ff00; font-size: 11px; margin-bottom: 20px; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div id="tela-login" class="box" style="display: block;">
+            <h1>KING SENSI</h1>
+            <div class="line"></div>
+            <p style="font-size: 10px; color: #888;">INSIRA SUA KEY DE ACESSO</p>
+            <input type="text" id="key-input" placeholder="DIGITE AQUI">
+            <button class="btn-white" onclick="logar()">ENTRAR NO PAINEL</button>
+            <div class="footer" style="margin-top: 20px; font-size: 9px;">BY @eoo_gomes3</div>
+        </div>
+
+        <div id="tela-painel" class="box">
+            <h1>KING SENSI</h1>
+            <div class="line"></div>
+            <div id="plano-info" class="status-plano">LICENÇA ATIVA</div>
+
+            <button class="btn-white" onclick="alert('Smoothing Aplicado!')">SMOOTHING (AJUSTAR)</button>
+            <button class="btn-white" onclick="alert('Lock Head Ativado!')" style="margin-top: 12px;">LOCK HEAD (ATIVAR)</button>
+
+            <button class="btn-outline" onclick="sair()">SAIR</button>
+        </div>
+    </div>
+
+    <script>
+        // Função para Logar
+        function logar() {
+            const key = document.getElementById('key-input').value.trim().toUpperCase();
+            
+            // Verifica se a key segue o padrão K1-, K5-, K10-, K30-
+            const padrao = /^K(1|5|10|30)-[0-9]{3}$/;
+
+            if (padrao.test(key)) {
+                const dias = parseInt(key.split('-')[0].replace('K', ''));
+                const agora = new Date().getTime();
+                const expiracao = agora + (dias * 24 * 60 * 60 * 1000);
+
+                // Salva os dados no navegador
+                localStorage.setItem('king_key', key);
+                localStorage.setItem('king_expira', expiracao);
+
+                entrarNoPainel(dias);
+            } else {
+                alert("KEY INVÁLIDA!");
+            }
+        }
+
+        function entrarNoPainel(dias) {
+            document.getElementById('tela-login').style.display = 'none';
+            document.getElementById('tela-painel').style.display = 'block';
+            document.getElementById('plano-info').innerText = "LICENÇA ATIVA: " + dias + " DIAS";
+        }
+
+        // Verifica expiração ao abrir a página
+        window.onload = function() {
+            const expira = localStorage.getItem('king_expira');
+            const keySalva = localStorage.getItem('king_key');
+
+            if (keySalva && expira) {
+                const agora = new Date().getTime();
+                if (agora > parseInt(expira)) {
+                    localStorage.clear();
+                    alert("ACESSO NEGADO: SUA KEY EXPIROU!");
+                    location.reload();
+                } else {
+                    // Se já estiver logado e no prazo, pula o login
+                    const diasRestantes = Math.ceil((parseInt(expira) - agora) / (1000 * 60 * 60 * 24));
+                    entrarNoPainel(diasRestantes);
+                }
+            }
+        };
+
+        function sair() {
+            localStorage.clear();
+            location.reload();
+        }
+    </script>
+</body>
+</html>
